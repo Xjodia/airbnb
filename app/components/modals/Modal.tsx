@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Button from "../Button";
 
@@ -36,14 +36,15 @@ const Modal: React.FC<ModalProps> = ({
   }, [isOpen]);
 
   const handleClose = useCallback(() => {
-    if (isOpen) {
-      return false;
+    if (disabled) {
+      return;
     }
+
     setShowModal(false);
     setTimeout(() => {
       onClose();
     }, 300);
-  }, [isOpen, onClose]);
+  }, [disabled, onClose]);
 
   const handleSubmit = useCallback(() => {
     if (disabled) {
@@ -134,8 +135,11 @@ const Modal: React.FC<ModalProps> = ({
                   border-b-[1px]
                 "
               >
-                <button className="absolute p-1 transition border-0 hover:opacity-70 left-9">
-                  <IoMdClose size={20} />
+                <button
+                  className="absolute p-1 transition border-0 hover:opacity-70 right-9"
+                  onClick={handleClose}
+                >
+                  <IoMdClose size={18} />
                 </button>
                 <div className="text-lg font-semibold">{title}</div>
               </div>
