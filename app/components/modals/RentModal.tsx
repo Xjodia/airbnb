@@ -8,6 +8,7 @@ import useRentModal from "@/app/hooks/useRentModal";
 import { useMemo, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import Modal from "./Modal";
+import dynamic from "next/dynamic";
 
 enum STEPS {
   CATEGORY = 0,
@@ -66,8 +67,13 @@ const RentModal = () => {
   });
 
   const category = watch("category");
+  const location = watch('location');
 
-  const setCustomValue = (id: string, value: string) => {
+  const Map = useMemo(() => dynamic(() => import('../Map'), {
+    ssr: false,
+  }), [location])
+
+  const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
       shouldDirty: true,
       shouldValidate: true,
@@ -112,7 +118,13 @@ const RentModal = () => {
           title="Where is your place located?"
           subtitle="Pick your location :3"
         />
-        <CountrySelect />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue('location', value)}
+        />
+        <Map
+          center={location?.latlng}
+        />
       </div>
     );
   }
